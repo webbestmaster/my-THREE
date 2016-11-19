@@ -21,6 +21,15 @@
 <script src="js/three.min.js"></script>
 <script src="js/OrbitControls.js"></script>
 
+
+<script src="js/loaders/DDSLoader.js"></script>
+<script src="js/loaders/MTLLoader.js"></script>
+<script src="js/loaders/OBJLoader.js"></script>
+
+<script src="js/Detector.js"></script>
+
+
+
 <script>
 
 //    (function () {
@@ -44,10 +53,13 @@
         // Sets up the scene.
         function init() {
 
+//            THREE.Loader.Handlers.add( /\.dds$/i, new THREE.DDSLoader() );
+
             // Create the scene and set the scene size.
             scene = new THREE.Scene();
+
             var WIDTH = window.document.documentElement.clientWidth,
-                HEIGHT = window.innerHeight;
+                HEIGHT = window.document.documentElement.clientHeight;
 
             // Create a renderer and add it to the DOM.
             renderer = new THREE.WebGLRenderer({antialias: true});
@@ -60,7 +72,7 @@
             scene.add(camera);
 
             // Set the background color of the scene.
-            renderer.setClearColorHex(0x333F47, 1);
+            renderer.setClearColor(0x333F47, 1);
 
             // Create a light, set its position, and add it to the scene.
             var light = new THREE.PointLight(0xffffff);
@@ -76,32 +88,29 @@
 
 
             // Load in the mesh and add it to the scene.
-            var loader = new THREE.JSONLoader();
-            loader.load("models/treehouse_logo.json", function (geometry) {
+            var loader = new THREE.OBJLoader();
+//            loader.load("models/treehouse_logo.json", function (geometry) {
+            loader.load("models/Kranvagn/Kranvagn.mb", function (geometry) {
+
+
+                console.log('111');
+
                 var material = new THREE.MeshLambertMaterial({color: 0x55B663});
                 mesh = new THREE.Mesh(geometry, material);
                 scene.add(mesh);
             });
 
 
-
+            // Create an event listener that resizes the renderer with the browser window.
+            window.addEventListener('resize', function () {
+                var WIDTH = window.document.documentElement.clientWidth,
+                    HEIGHT = window.document.documentElement.clientHeight;
+                renderer.setSize(WIDTH, HEIGHT);
+                camera.aspect = WIDTH / HEIGHT;
+                camera.updateProjectionMatrix();
+            });
 
         }
-
-
-
-
-
-
-        // Create an event listener that resizes the renderer with the browser window.
-        window.addEventListener('resize', function () {
-            var WIDTH = window.document.documentElement.clientWidth,
-                HEIGHT = window.innerHeight;
-            renderer.setSize(WIDTH, HEIGHT);
-            camera.aspect = WIDTH / HEIGHT;
-            camera.updateProjectionMatrix();
-        });
-
 
 //    }())
 
